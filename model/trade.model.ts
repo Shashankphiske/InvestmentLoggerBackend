@@ -24,6 +24,7 @@ const tradeModel = new mongoose.Schema<mongoTrade>({
     selltime : { type : Number, required : true },
     quantity : { type : Number, required : true },
     unrealisedgains : { type : Number, required : true },
+    charges : { type : Number, required : true },
     realisedgains : { type : Number, required : true }
 })
 

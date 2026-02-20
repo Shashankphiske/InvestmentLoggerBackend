@@ -1,4 +1,5 @@
 import { authControllerClass } from "../controller/auth.controller.js";
+import { authenticateClass } from "../middleware/authenticate.js";
 import { userMongoRepositoryClass } from "../repository/user/user.mongorepository.js"
 import { authServicesClass } from "../services/auth.services.js";
 import { authUtilClass } from "../utils/auth.utils.js";
@@ -16,6 +17,13 @@ class authFactory {
         const util = new authUtilClass();
         
         return util;
+    }
+
+    static createAuthenticate () {
+        const repo = new userMongoRepositoryClass();
+        const authenticate = new authenticateClass(repo);
+
+        return authenticate;
     }
 }
 
