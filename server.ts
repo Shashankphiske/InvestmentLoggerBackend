@@ -8,6 +8,7 @@ import helmet from "helmet";
 import { userRouter } from "./router/user.router.js";
 import { authFactory } from "./factory/auth.factory.js";
 import { tradeRouter } from "./router/trade.router.js";
+import { globalErrorHandler } from "./utils/error.utils.js";
 
 dns.setServers(['8.8.8.8', '1.1.1.1']); // Forces Node to use Google and Cloudflare DNS
 
@@ -31,6 +32,8 @@ app.use(authenticate.authenticate);
 
 app.use("/user", userRouter);
 app.use("/trade", tradeRouter);
+
+app.use(globalErrorHandler.handleError)
 
 app.listen(process.env.PORT, () => {
     console.log("App running on port 3000");
