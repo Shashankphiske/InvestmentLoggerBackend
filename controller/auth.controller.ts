@@ -5,8 +5,9 @@ class authControllerClass {
     constructor ( private authServices : authServicesClass ) {}
 
     login = async ( req : Request, res : Response ) => {
-        const result = await this.authServices.login(req.body);
-        return res.send(result);
+        const token = await this.authServices.login(req.body);
+        res.cookie("token", token, { maxAge : 7 * 24 * 60 * 60 * 1000, sameSite : true, httpOnly : true });
+        return res.send("Success");
     }
 }
 

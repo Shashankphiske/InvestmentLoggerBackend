@@ -1,6 +1,7 @@
 import { type baseUser } from "../model/user.model.js";
 import type { userMongoRepositoryClass } from "../repository/user/user.mongorepository.js";
 import { authUtil } from "../utils/auth.utils.js";
+import { serverError } from "../utils/error.utils.js";
 
 class authServicesClass {
     constructor ( private userMethods : userMongoRepositoryClass ) {}
@@ -15,7 +16,7 @@ class authServicesClass {
             }
         }
 
-        return "Invalid Credentials";
+        throw new serverError(400, "Invalid credentials");
     }
 
 }

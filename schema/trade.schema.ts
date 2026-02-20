@@ -12,7 +12,7 @@ const tradeCreateSchema = z.object({
     }),
 
     cookies : z.object({
-        token : z.string()
+        token : z.string({ error : "Please login" })
     })
 });
 
