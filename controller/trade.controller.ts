@@ -15,7 +15,7 @@ class tradeControllerClass {
     }
 
     get = async (req : Request, res : Response) => {
-        const trade = await this.tradeServices.get(req.body.id);
+        const trade = await this.tradeServices.get(req.params.id?.toString() ?? "");
         return trade;
     }
 
