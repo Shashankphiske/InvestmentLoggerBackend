@@ -9,6 +9,7 @@ import { userRouter } from "./router/user.router.js";
 import { authFactory } from "./factory/auth.factory.js";
 import { tradeRouter } from "./router/trade.router.js";
 import { errorHandler, globalErrorHandler } from "./utils/error.utils.js";
+import cors from "cors";
 
 dns.setServers(['8.8.8.8', '1.1.1.1']); // Forces Node to use Google and Cloudflare DNS
 
@@ -16,6 +17,14 @@ const app = express();
 app.use(express.json());
 app.use(cookieparser());
 app.use(helmet());
+
+const corsOptions = {
+  origin: ["http://localhost:8080"], // Your frontend URL
+  methods: 'GET,POST,PUT,PATCH,DELETE',
+  credentials: true, // Necessary if you're using cookies for sessions
+};
+
+app.use(cors(corsOptions));
 
 dotenv.config()
 

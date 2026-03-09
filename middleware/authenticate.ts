@@ -13,7 +13,7 @@ class authenticateClass {
         const { email } = authUtil.decodeToken(req.cookies.token);
         const user = await this.userMethods.getByEmail(email);
         if(user.email){
-            next();
+            return next();
         }
 
         return res.status(400).json({

@@ -5,23 +5,40 @@ class tradeControllerClass {
     constructor ( private tradeServices : tradeServicesClass ) {}
     
     create  = async ( req : Request, res : Response ) => {
+        console.log(req.body)
         const trade = await this.tradeServices.create(req.body);
-        return trade;
+        return res.json({
+            success : true,
+            message : "Trade logged successfuly",
+            data : trade
+        })
     }
 
     getAll = async (req : Request, res : Response) => {
         const trades = await this.tradeServices.getAll();
-        return trades;
+        return res.json({
+            success : true,
+            message : "Trades fetched successfuly",
+            data : trades
+        })
     }
 
     get = async (req : Request, res : Response) => {
         const trade = await this.tradeServices.get(req.params.id?.toString() ?? "");
-        return trade;
+        return res.json({
+            success : true,
+            message : "Trade fetched successfuly",
+            data : trade
+        })
     }
 
     delete = async (req : Request, res : Response) => {
-        const trade = await this.tradeServices.delete(req.body.id);
-        return trade;
+        const trade = await this.tradeServices.delete(req.params.id?.toString() ?? "");
+        return res.json({
+            success : true,
+            message : "Trade deleted successfuly",
+            data : trade
+        })
     }
 }
 

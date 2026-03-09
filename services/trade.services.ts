@@ -4,29 +4,40 @@ import type { tradeMongoRepositoryClass } from "../repository/trade/trade.mongor
 class tradeServicesClass {
     constructor ( private tradeMethods : tradeMongoRepositoryClass ) {}
 
-    create = async (data : baseTrade) => {
+create = async (data: baseTrade) => {
+    const { buyVal, sellVal, quantity: qty } = data;
 
-        const volume = (data.sellval * data.quantity) + (data.buyval * data.quantity);
+    const buyTurnover = buyVal * qty;
+    const sellTurnover = sellVal * qty;
+    const totalTurnover = buyTurnover + sellTurnover;
 
-        const unrealisedgains = (data.sellval * data.quantity) - (data.buyval * data.quantity);
-        const stt = 0.15 * (volume / 100);
-        const etc = 0.035 * (volume / 100);
-        const gst = 18 * (volume / 100);
-        const stf = 0.0001 * (volume / 100);
-        const stampDuty = 0.002 * (volume / 100);
-        const brokerage = 20;
+    // 1. Service Charges (Taxable at 18% GST)
+    const brokerage = 40; // ₹20 Buy + ₹20 Sell
+    const etc = 0.0003503 * totalTurnover; // Current NSE Options rate
+    const sebiCharges = 0.000001 * totalTurnover; // ₹10 per Crore
 
-        const charges = unrealisedgains + stt + etc + gst + stf + stampDuty + brokerage;
+    // 2. GST: 18% ONLY on Service Charges
+    const gst = 0.18 * (brokerage + etc + sebiCharges);
 
-        const trade = await this.tradeMethods.create({
-            ...data,
-            charges : charges,
-            unrealisedgains : unrealisedgains,
-            realisedgains : unrealisedgains - charges 
-        })
+    // 3. Statutory Taxes (Current March 2026 Rates - No GST)
+    const stt = 0.001 * sellTurnover; // 0.1% (Pre-April 2026 rate)
+    const stampDuty = 0.00003 * buyTurnover; // 0.003% on Buy side only
 
-        return trade;
-    }
+    // FINAL CALCULATION
+    const totalCharges = brokerage + etc + sebiCharges + gst + stt + stampDuty;
+    const grossPnL = sellTurnover - buyTurnover;
+    const netPnL = grossPnL - totalCharges;
+
+    return await this.tradeMethods.create({
+        ...data,
+        charges: Number(totalCharges.toFixed(2)),
+        unrealisedgains: Number(grossPnL.toFixed(2)), // Gross Profit
+        realisedgains: Number(netPnL.toFixed(2))     // Net Profit
+    });
+}
+
+
+
 
     getAll = async () => {
         const trades = await this.tradeMethods.getAll();

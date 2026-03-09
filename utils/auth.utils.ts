@@ -3,11 +3,11 @@ import bcrypt from "bcrypt";
 
 class authUtilClass {
     generateToken = ( email : string ) => {
-        return jwt.sign(email, process.env.SECRET as string);
+        return jwt.sign( { email }, process.env.SECRET as string);
     }
 
     decodeToken = ( token : string ) => {
-        return jwt.verify(token, process.env.SECRET as string) as { email : string }
+        return jwt.verify(token, process.env.SECRET as string) as { email: string }
     }
 
     generatePass = async ( password : string ) => {
