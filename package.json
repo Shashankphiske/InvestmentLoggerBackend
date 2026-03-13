@@ -35,7 +35,9 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.1.0",
     "mongoose": "^9.2.1",
+    "netlify": "^24.2.0",
     "nodemon": "^3.1.13",
+    "serverless-http": "^4.0.0",
     "zod": "^4.3.6"
   }
 }

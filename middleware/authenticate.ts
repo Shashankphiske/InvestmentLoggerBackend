@@ -6,6 +6,7 @@ class authenticateClass {
     constructor ( private userMethods : userMongoRepositoryClass ) {}
 
     authenticate = async (req : Request, res : Response, next : NextFunction) => {
+        console.log(req.cookies.token);
         if(!req.cookies.token) return res.status(400).json({
             success : false,
             message : "Please login"
